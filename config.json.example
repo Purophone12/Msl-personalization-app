@@ -1,0 +1,13 @@
+{
+  "Branding": {
+    "OrganizationName": "Contoso Corporation",
+    "LogoPath": "C:\\Branding\\logo.png",
+    "AccentColor": "#0078D4"
+  },
+  "Features": {
+    "EnableWallpaper": true,
+    "EnableTheme": true,
+    "EnableTaskbar": true,
+    "EnableDefaultApps": true
+  }
+}
