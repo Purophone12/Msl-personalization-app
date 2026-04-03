@@ -1,0 +1,22 @@
+<Page x:Class="DomainPersonalizationSetup.Views.WelcomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="400" d:DesignWidth="600"
+      Title="WelcomePage">
+    <Grid Margin="40">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Welcome to your new device!" FontSize="28" FontWeight="Light" Margin="0,0,0,20"/>
+            <TextBlock Text="This short setup will help you personalize your workspace. Let's get started to make you feel right at home."
+                       FontSize="16" TextWrapping="Wrap" Foreground="#555" Margin="0,0,0,30"/>
+
+            <StackPanel x:Name="NicknameSection" Visibility="Collapsed">
+                <TextBlock Text="What should we call you?" FontSize="18" Margin="0,0,0,10"/>
+                <TextBox x:Name="NicknameInput" Width="250" HorizontalAlignment="Left" Padding="5,5" FontSize="16" Margin="0,0,0,10" LostFocus="NicknameInput_LostFocus"/>
+                <TextBlock Text="Enter a nickname or your preferred display name." FontSize="14" Foreground="#888"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

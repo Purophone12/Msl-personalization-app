@@ -1,0 +1,22 @@
+<Page x:Class="DomainPersonalizationSetup.Views.ThemePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="300" d:DesignWidth="600"
+      Title="ThemePage">
+    <Grid Margin="40">
+        <StackPanel>
+            <TextBlock Text="Choose your theme" FontSize="22" Margin="0,0,0,10"/>
+            <TextBlock Text="Select your preferred appearance for Windows and applications." Margin="0,0,0,30" Foreground="#555"/>
+
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="LightThemeRadio" Content="Light Mode" IsChecked="True" GroupName="Theme" Margin="0,0,20,0" Padding="5,0,0,0"/>
+                <RadioButton x:Name="DarkThemeRadio" Content="Dark Mode" GroupName="Theme" Padding="5,0,0,0"/>
+            </StackPanel>
+
+            <Button Content="Apply Now" Margin="0,30,0,0" Width="100" HorizontalAlignment="Left" Click="ApplyTheme_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
