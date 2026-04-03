@@ -1,18 +1,22 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
-using DomainPersonalizationSetup.Services;
+using DomainPersonalizationSetup.ViewModels;
 
 namespace DomainPersonalizationSetup.Views
 {
     public partial class WallpaperPage : Page
     {
-        private readonly PersonalizationService _personalizationService = new();
-        private string? _selectedWallpaperPath;
+        private MainViewModel? ViewModel => Application.Current.MainWindow.DataContext as MainViewModel;
 
         public WallpaperPage()
         {
             InitializeComponent();
+            if (ViewModel != null && !string.IsNullOrEmpty(ViewModel.PendingWallpaper))
+            {
+                SelectedFilePathText.Text = ViewModel.PendingWallpaper;
+                ApplyWallpaperBtn.IsEnabled = true;
+            }
         }
 
         private void BrowseWallpaper_Click(object sender, RoutedEventArgs e)
@@ -24,19 +28,18 @@ namespace DomainPersonalizationSetup.Views
 
             if (dialog.ShowDialog() == true)
             {
-                _selectedWallpaperPath = dialog.FileName;
-                SelectedFilePathText.Text = _selectedWallpaperPath;
-                ApplyWallpaperBtn.IsEnabled = true;
+                if (ViewModel != null)
+                {
+                    ViewModel.PendingWallpaper = dialog.FileName;
+                    SelectedFilePathText.Text = ViewModel.PendingWallpaper;
+                    ApplyWallpaperBtn.IsEnabled = true;
+                }
             }
         }
 
         private void ApplyWallpaper_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_selectedWallpaperPath))
-            {
-                _personalizationService.SetWallpaper(_selectedWallpaperPath);
-                MessageBox.Show("Wallpaper applied successfully!", "Personalization", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            MessageBox.Show("Wallpaper selected! It will be applied when you click Finish.", "Personalization", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

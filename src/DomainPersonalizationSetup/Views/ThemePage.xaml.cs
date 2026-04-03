@@ -1,23 +1,30 @@
 using System.Windows;
 using System.Windows.Controls;
-using DomainPersonalizationSetup.Services;
+using DomainPersonalizationSetup.ViewModels;
 
 namespace DomainPersonalizationSetup.Views
 {
     public partial class ThemePage : Page
     {
-        private readonly PersonalizationService _personalizationService = new();
+        private MainViewModel? ViewModel => Application.Current.MainWindow.DataContext as MainViewModel;
 
         public ThemePage()
         {
             InitializeComponent();
+            if (ViewModel != null && ViewModel.PendingIsDark.HasValue)
+            {
+                DarkThemeRadio.IsChecked = ViewModel.PendingIsDark.Value;
+                LightThemeRadio.IsChecked = !ViewModel.PendingIsDark.Value;
+            }
         }
 
         private void ApplyTheme_Click(object sender, RoutedEventArgs e)
         {
-            bool isDark = DarkThemeRadio.IsChecked == true;
-            _personalizationService.SetTheme(isDark);
-            MessageBox.Show($"{(isDark ? "Dark" : "Light")} theme applied successfully!", "Personalization", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (ViewModel != null)
+            {
+                ViewModel.PendingIsDark = DarkThemeRadio.IsChecked == true;
+                MessageBox.Show($"Theme preference updated! Settings will be applied when you click Finish.", "Personalization", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
     }
 }

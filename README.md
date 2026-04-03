@@ -11,11 +11,12 @@ An automated setup tool designed for Windows domain environments, guiding new us
 - **Quick Access**: Simple access to taskbar alignment and default app settings.
 - **Admin Controls**: Configure available features and defaults via a `config.json` file.
 - **Non-Admin Safe**: Does not require administrative privileges.
+- **Domain awareness**: Warns users if the device is not domain-joined.
 
 ## Requirements
 
 - Windows 10 or 11
-- .NET 8.0 or newer (built with .NET 10.0)
+- .NET 8.0 or newer
 
 ## Configuration
 
@@ -38,10 +39,35 @@ The application searches for `config.json` in the following locations (in order)
     "EnableWallpaper": true,
     "EnableTheme": true,
     "EnableTaskbar": true,
-    "EnableDefaultApps": true
+    "EnableDefaultApps": true,
+    "EnableNickname": true
   }
 }
 ```
+
+## Installer Generation
+
+A tool is provided in `tools/generate_installer.py` to create an EXE installer for the application.
+
+### Prerequisites
+
+- [NSIS (Nullsoft Scriptable Install System)](https://nsis.sourceforge.io/Download) installed on your system.
+
+### How to use
+
+1. Publish the application:
+   ```bash
+   dotnet publish -c Release -r win-x64 --self-contained false -o publish
+   ```
+2. Configure the installer in `installer_config.json`.
+3. Run the generator:
+   ```bash
+   python3 tools/generate_installer.py
+   ```
+4. Compile the installer with NSIS:
+   ```bash
+   makensis installer.nsi
+   ```
 
 ## Deployment
 
@@ -53,8 +79,8 @@ Create a Task Scheduler GPO that runs `DomainPersonalizationSetup.exe` at user l
 ### 2. GPO - Login Script
 Add the executable to a logon script in the user's GPO settings.
 
-### 3. Startup Folder
-Copy the application or a shortcut to `%ProgramData%\Microsoft\Windows\Start Menu\Programs\StartUp`.
+### 3. MSI/EXE Installer
+Deploy the generated installer using tools like SCCM, Intune, or a GPO-assigned software installation.
 
 ## Logging
 

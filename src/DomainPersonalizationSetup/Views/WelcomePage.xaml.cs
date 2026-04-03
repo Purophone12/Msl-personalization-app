@@ -1,13 +1,13 @@
 using System.Windows;
 using System.Windows.Controls;
 using DomainPersonalizationSetup.Core;
-using DomainPersonalizationSetup.Services;
+using DomainPersonalizationSetup.ViewModels;
 
 namespace DomainPersonalizationSetup.Views
 {
     public partial class WelcomePage : Page
     {
-        private readonly PersonalizationService _personalizationService = new();
+        private MainViewModel? ViewModel => Application.Current.MainWindow.DataContext as MainViewModel;
 
         public WelcomePage()
         {
@@ -20,9 +20,9 @@ namespace DomainPersonalizationSetup.Views
 
         private void NicknameInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(NicknameInput.Text))
+            if (ViewModel != null)
             {
-                _personalizationService.SetNickname(NicknameInput.Text);
+                ViewModel.PendingNickname = NicknameInput.Text;
             }
         }
     }

@@ -18,6 +18,7 @@ using System.Windows.Input;
 using DomainPersonalizationSetup.Core;
 using DomainPersonalizationSetup.ViewModels;
 using DomainPersonalizationSetup.Views;
+using DomainPersonalizationSetup.Services;
 
 namespace DomainPersonalizationSetup.ViewModels
 {
@@ -42,10 +43,22 @@ namespace DomainPersonalizationSetup.ViewModels
         private int _currentPageIndex = 0;
         private readonly List<UIElement> _pages = new();
         private readonly Action<UIElement> _navigateAction;
+        private readonly PersonalizationService _personalizationService = new();
+
+        // Pending settings
+        public string? PendingWallpaper { get; set; }
+        public bool? PendingIsDark { get; set; }
+        public bool? PendingTaskbarCenter { get; set; }
+        public string? PendingNickname { get; set; }
 
         public MainViewModel(Action<UIElement> navigateAction)
         {
             _navigateAction = navigateAction;
+
+            // Load Defaults from Config
+            if (ConfigManager.Current.Defaults.TryGetValue("Wallpaper", out string? wp)) PendingWallpaper = wp;
+            if (ConfigManager.Current.Defaults.TryGetValue("Theme", out string? theme)) PendingIsDark = theme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
+            if (ConfigManager.Current.Defaults.TryGetValue("TaskbarAlignment", out string? align)) PendingTaskbarCenter = align.Equals("Center", StringComparison.OrdinalIgnoreCase);
 
             // Initialize Pages
             _pages.Add(new WelcomePage());
@@ -92,8 +105,27 @@ namespace DomainPersonalizationSetup.ViewModels
 
         private void Finish()
         {
+            ApplyPendingSettings();
             EnvironmentChecker.MarkSetupComplete();
             Application.Current.Shutdown();
+        }
+
+        private void ApplyPendingSettings()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(PendingNickname)) _personalizationService.SetNickname(PendingNickname);
+                if (PendingIsDark.HasValue) _personalizationService.SetTheme(PendingIsDark.Value);
+                if (!string.IsNullOrEmpty(PendingWallpaper)) _personalizationService.SetWallpaper(PendingWallpaper);
+                if (PendingTaskbarCenter.HasValue) _personalizationService.SetTaskbarAlignment(PendingTaskbarCenter.Value);
+
+                _personalizationService.NotifyShell();
+                Logger.Info("All pending settings applied on Finish.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error applying pending settings during Finish", ex);
+            }
         }
     }
 }

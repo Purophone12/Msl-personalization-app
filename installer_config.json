@@ -1,0 +1,9 @@
+{
+    "AppName": "DomainPersonalizationSetup",
+    "ExecutableName": "DomainPersonalizationSetup.exe",
+    "OutFile": "DomainPersonalizationSetup_Installer.exe",
+    "PerUser": true,
+    "CreateDesktopShortcut": true,
+    "OrganizationName": "Contoso Corp",
+    "Version": "1.0.0"
+}
